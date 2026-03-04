@@ -75,10 +75,11 @@ async function submitRsvp(formData: FormData) {
         : null,
       message: message.length ? message : null,
     });
-    redirect("/?rsvp=thanks#rsvp");
   } catch {
     redirect("/?rsvp=error#rsvp");
   }
+
+  redirect("/?rsvp=thanks#rsvp");
 }
 
 function comparePartyMembersByColor<
