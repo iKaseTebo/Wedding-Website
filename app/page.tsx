@@ -236,7 +236,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </div>
               </div>
               <div className="rounded-3xl border border-[color:rgba(79,54,36,0.12)] bg-white/55 px-5 py-4 text-sm uppercase tracking-[0.28em] text-[color:var(--brown)]">
-                Cozy dinner. Comfort food. Disco after dark.
+                Cozy ceremony, comfort food, & disco dancing
               </div>
             </div>
           </div>
