@@ -38,7 +38,7 @@ export const rsvps = pgTable("rsvps", {
 export const partyMembers = pgTable("party_members", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  email: varchar("email", { length: 256 }).notNull().unique(),
+  email: varchar("email", { length: 256 }),
   clerkUserId: varchar("clerk_user_id", { length: 256 }),
   partyRole: partyRoleEnum("party_role").notNull().default("other"),
   colorName: varchar("color_name", { length: 64 }).notNull(),

@@ -1,7 +1,6 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
-import { currentUser } from "@clerk/nextjs/server";
 import { asc, eq } from "drizzle-orm";
-import AuthControls from "@/app/components/AuthControls";
 import RsvpForm from "@/app/components/RsvpForm";
 import { db } from "@/db";
 import { clothingItems, partyMembers, rsvps } from "@/db/schema";
@@ -9,6 +8,15 @@ import { clothingItems, partyMembers, rsvps } from "@/db/schema";
 type HomeProps = {
   searchParams?: Promise<{ rsvp?: string }>;
 };
+
+const partyColorOrder = [
+  "olive",
+  "moss green",
+  "paprika",
+  "mai tai",
+  "cinnamon",
+  "butterscotch",
+];
 
 const rsvpNotice: Record<string, string> = {
   thanks: "Thanks for celebrating with us. We saved your RSVP.",
@@ -73,69 +81,63 @@ async function submitRsvp(formData: FormData) {
   }
 }
 
+function comparePartyMembersByColor<
+  T extends { colorName: string; name: string },
+>(left: T, right: T) {
+  const leftColor = left.colorName.trim().toLowerCase();
+  const rightColor = right.colorName.trim().toLowerCase();
+  const leftIndex = partyColorOrder.indexOf(leftColor);
+  const rightIndex = partyColorOrder.indexOf(rightColor);
+  const normalizedLeftIndex =
+    leftIndex === -1 ? partyColorOrder.length : leftIndex;
+  const normalizedRightIndex =
+    rightIndex === -1 ? partyColorOrder.length : rightIndex;
+
+  if (normalizedLeftIndex !== normalizedRightIndex) {
+    return normalizedLeftIndex - normalizedRightIndex;
+  }
+
+  return left.name.localeCompare(right.name);
+}
+
 export default async function Home({ searchParams }: HomeProps) {
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const registryUrl =
     process.env.NEXT_PUBLIC_REGISTRY_URL ||
     "https://www.amazon.com/wedding/registry";
-  const user = await currentUser();
-  const email = user?.primaryEmailAddress?.emailAddress?.toLowerCase() ?? null;
-  const displayName =
-    user?.fullName ||
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-    "Wedding Party Member";
+  const groomsmen = db
+    ? await db
+        .select()
+        .from(partyMembers)
+        .where(eq(partyMembers.partyRole, "groomsman"))
+        .orderBy(asc(partyMembers.name))
+    : [];
 
-  if (user && email && db) {
-    try {
-      await db
-        .insert(partyMembers)
-        .values({
-          name: displayName,
-          email,
-          clerkUserId: user.id,
-          partyRole: "other",
-          colorName: "Unassigned",
-          colorHex: "#edc6a4",
-        })
-        .onConflictDoUpdate({
-          target: partyMembers.email,
-          set: {
-            name: displayName,
-            clerkUserId: user.id,
-          },
-        });
-    } catch {
-      // If the insert/update fails, we still let the page render.
-    }
-  }
+  const bridesmaids = db
+    ? await db
+        .select()
+        .from(partyMembers)
+        .where(eq(partyMembers.partyRole, "bridesmaid"))
+        .orderBy(asc(partyMembers.name))
+    : [];
 
-  const partyMember =
-    email && db
-      ? (
-          await db
-            .select()
-            .from(partyMembers)
-            .where(eq(partyMembers.email, email))
-            .limit(1)
-        )[0]
-      : null;
+  const groomsmanItems = db
+    ? await db
+        .select()
+        .from(clothingItems)
+        .where(eq(clothingItems.partyRole, "groomsman"))
+        .orderBy(asc(clothingItems.name))
+    : [];
 
-  const items =
-    partyMember && db
-      ? await db
-          .select()
-          .from(clothingItems)
-          .where(eq(clothingItems.partyRole, partyMember.partyRole))
-          .orderBy(asc(clothingItems.name))
-      : [];
-
-  const roster =
-    user && db
-      ? await db
-          .select()
-          .from(partyMembers)
-          .orderBy(asc(partyMembers.partyRole), asc(partyMembers.name))
-      : [];
+  const bridesmaidItems = db
+    ? await db
+        .select()
+        .from(clothingItems)
+        .where(eq(clothingItems.partyRole, "bridesmaid"))
+        .orderBy(asc(clothingItems.name))
+    : [];
+  const orderedGroomsmen = [...groomsmen].sort(comparePartyMembersByColor);
+  const orderedBridesmaids = [...bridesmaids].sort(comparePartyMembersByColor);
 
   const notice = resolvedSearchParams?.rsvp
     ? rsvpNotice[resolvedSearchParams.rsvp]
@@ -173,27 +175,37 @@ export default async function Home({ searchParams }: HomeProps) {
                 </a>
               </div>
             </div>
-            <div className="flex flex-col items-end gap-6">
-              <AuthControls />
-              <div className="relative self-end">
-                <div className="disco">
-                  <span className="sparkle one" />
-                  <span className="sparkle two" />
-                </div>
-              </div>
-            </div>
           </header>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="card rise delay-1 flex h-40 items-center justify-center text-center text-sm uppercase tracking-[0.3em]">
-                Photo
+              <div className="card rise delay-1 relative h-48 overflow-hidden p-0 sm:h-40 lg:h-48">
+                <Image
+                  src="/1.jpg"
+                  alt="Rebecca and Kase photo 1"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 33vw, 26vw"
+                  priority
+                />
               </div>
-              <div className="card rise delay-2 flex h-40 items-center justify-center text-center text-sm uppercase tracking-[0.3em]">
-                Photo
+              <div className="card rise delay-2 relative h-48 overflow-hidden p-0 sm:h-40 lg:h-48">
+                <Image
+                  src="/2.jpg"
+                  alt="Rebecca and Kase photo 2"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 33vw, 26vw"
+                />
               </div>
-              <div className="card rise delay-3 flex h-40 items-center justify-center text-center text-sm uppercase tracking-[0.3em]">
-                Photo
+              <div className="card rise delay-3 relative h-48 overflow-hidden p-0 sm:h-40 lg:h-48">
+                <Image
+                  src="/3.jpg"
+                  alt="Rebecca and Kase photo 3"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 33vw, 26vw"
+                />
               </div>
             </div>
             <div className="card flex flex-col justify-center gap-4 p-6">
@@ -238,57 +250,55 @@ export default async function Home({ searchParams }: HomeProps) {
                 Wedding Party
               </h2>
               <p className="max-w-3xl text-base leading-7 text-[color:var(--brown)]">
-                Wedding party details, outfits, and color assignments show here
-                once you sign in.
+                Meet the wedding party and see the assigned colors and attire
+                for each side of the celebration.
               </p>
             </div>
 
-            {!user ? (
+            {!isDbReady ? (
               <div className="rounded-2xl border border-dashed border-[color:var(--paprika)] p-6 text-center text-[color:var(--paprika)]">
-                Please sign in to see wedding party assignments and shopping
-                links.
-              </div>
-            ) : !isDbReady ? (
-              <div className="rounded-2xl border border-dashed border-[color:var(--paprika)] p-6 text-center text-[color:var(--paprika)]">
-                Connect the database to load wedding party assignments.
+                Connect the database to load wedding party details.
               </div>
             ) : (
-              <div className="grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+              <div className="grid gap-6 lg:grid-cols-2">
                 <div className="flex flex-col gap-4">
                   <div className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
-                    Your assignment
+                    Groomsmen
                   </div>
-                  {partyMember ? (
-                    <div className="flex flex-col gap-3 rounded-2xl border border-[color:var(--blush)] bg-white/70 p-5">
-                      <div className="text-xl font-semibold text-[color:var(--deep-brown)]">
-                        {partyMember.name}
-                      </div>
-                      <div className="text-sm uppercase tracking-[0.3em] text-[color:var(--brown)]">
-                        {partyMember.partyRole}
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span
-                          className="h-6 w-6 rounded-full border border-[color:var(--brown)]"
-                          style={{ backgroundColor: partyMember.colorHex }}
-                        />
-                        <span className="text-base text-[color:var(--brown)]">
-                          {partyMember.colorName}
-                        </span>
-                      </div>
+                  {orderedGroomsmen.length ? (
+                    <div className="grid gap-3">
+                      {orderedGroomsmen.map((member) => (
+                        <div
+                          key={member.id}
+                          className="flex items-center justify-between rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4"
+                        >
+                          <div className="text-base font-semibold text-[color:var(--deep-brown)]">
+                            {member.name}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="h-5 w-5 rounded-full border border-[color:var(--brown)]"
+                              style={{ backgroundColor: member.colorHex }}
+                            />
+                            <span className="text-xs uppercase tracking-[0.3em] text-[color:var(--brown)]">
+                              {member.colorName}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-dashed border-[color:var(--paprika)] p-4 text-[color:var(--paprika)]">
-                      You are signed in, but not on the wedding party list yet.
-                      Add your email to the party members table to activate.
+                      No groomsmen have been added yet.
                     </div>
                   )}
 
                   <div className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
-                    What to wear
+                    Groomsmen Attire
                   </div>
-                  {items.length ? (
+                  {groomsmanItems.length ? (
                     <div className="grid gap-3">
-                      {items.map((item) => (
+                      {groomsmanItems.map((item) => (
                         <a
                           key={item.id}
                           className="flex items-center justify-between rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4 transition hover:-translate-y-0.5"
@@ -314,29 +324,24 @@ export default async function Home({ searchParams }: HomeProps) {
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-dashed border-[color:var(--paprika)] p-4 text-[color:var(--paprika)]">
-                      No clothing items have been added for your party yet.
+                      No groomsmen clothing items have been added yet.
                     </div>
                   )}
                 </div>
 
                 <div className="flex flex-col gap-4">
                   <div className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
-                    Wedding party roster
+                    Bridesmaids
                   </div>
-                  {roster.length ? (
+                  {orderedBridesmaids.length ? (
                     <div className="grid gap-3">
-                      {roster.map((member) => (
+                      {orderedBridesmaids.map((member) => (
                         <div
                           key={member.id}
                           className="flex items-center justify-between rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4"
                         >
-                          <div>
-                            <div className="text-base font-semibold text-[color:var(--deep-brown)]">
-                              {member.name}
-                            </div>
-                            <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--brown)]">
-                              {member.partyRole}
-                            </div>
+                          <div className="text-base font-semibold text-[color:var(--deep-brown)]">
+                            {member.name}
                           </div>
                           <div className="flex items-center gap-2">
                             <span
@@ -352,7 +357,42 @@ export default async function Home({ searchParams }: HomeProps) {
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-dashed border-[color:var(--paprika)] p-4 text-[color:var(--paprika)]">
-                      No wedding party members yet. Add them in the database.
+                      No bridesmaids have been added yet.
+                    </div>
+                  )}
+
+                  <div className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
+                    Bridesmaid Attire
+                  </div>
+                  {bridesmaidItems.length ? (
+                    <div className="grid gap-3">
+                      {bridesmaidItems.map((item) => (
+                        <a
+                          key={item.id}
+                          className="flex items-center justify-between rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4 transition hover:-translate-y-0.5"
+                          href={item.link}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <div>
+                            <div className="text-base font-semibold text-[color:var(--deep-brown)]">
+                              {item.name}
+                            </div>
+                            {item.note ? (
+                              <div className="text-sm text-[color:var(--brown)]">
+                                {item.note}
+                              </div>
+                            ) : null}
+                          </div>
+                          <span className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
+                            Shop
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-dashed border-[color:var(--paprika)] p-4 text-[color:var(--paprika)]">
+                      No bridesmaid clothing items have been added yet.
                     </div>
                   )}
                 </div>
