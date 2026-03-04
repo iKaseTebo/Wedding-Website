@@ -172,10 +172,8 @@ export default async function Home({ searchParams }: HomeProps) {
                 Rebecca & Kase
               </h1>
               <p className="max-w-3xl text-lg leading-8 text-[color:var(--brown)] sm:text-xl">
-                A retro 70s disco celebration with velvet nights, sunburst
-                skies, and all the good grooves. Join us in Natural Bridge, NY
-                for golden hour vows, dinner at home, and dancing under the
-                stars.
+                A retro 70s disco celebration. Join us as we disco down the
+                aisle and groove into the night.
               </p>
             </div>
           </header>
