@@ -39,7 +39,6 @@ export const partyMembers = pgTable("party_members", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   email: varchar("email", { length: 256 }),
-  clerkUserId: varchar("clerk_user_id", { length: 256 }),
   partyRole: partyRoleEnum("party_role").notNull().default("other"),
   colorName: varchar("color_name", { length: 64 }).notNull(),
   colorHex: varchar("color_hex", { length: 16 }).notNull(),
@@ -52,7 +51,7 @@ export const clothingItems = pgTable("clothing_items", {
   id: serial("id").primaryKey(),
   partyRole: partyRoleEnum("party_role").notNull(),
   name: text("name").notNull(),
-  link: text("link").notNull(),
+  link: text("link"),
   note: text("note"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

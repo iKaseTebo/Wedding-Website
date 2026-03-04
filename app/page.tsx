@@ -299,27 +299,43 @@ export default async function Home({ searchParams }: HomeProps) {
                   {groomsmanItems.length ? (
                     <div className="grid gap-3">
                       {groomsmanItems.map((item) => (
-                        <a
-                          key={item.id}
-                          className="flex items-center justify-between rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4 transition hover:-translate-y-0.5"
-                          href={item.link}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <div>
+                        item.link ? (
+                          <a
+                            key={item.id}
+                            className="flex items-center justify-between rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4 transition hover:-translate-y-0.5"
+                            href={item.link}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <div>
+                              <div className="text-base font-semibold text-[color:var(--deep-brown)]">
+                                {item.name}
+                              </div>
+                              {item.note ? (
+                                <div className="text-sm text-[color:var(--brown)]">
+                                  {item.note}
+                                </div>
+                              ) : null}
+                            </div>
+                            <span className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
+                              Shop
+                            </span>
+                          </a>
+                        ) : (
+                          <div
+                            key={item.id}
+                            className="rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4"
+                          >
                             <div className="text-base font-semibold text-[color:var(--deep-brown)]">
                               {item.name}
                             </div>
                             {item.note ? (
-                              <div className="text-sm text-[color:var(--brown)]">
+                              <div className="mt-1 text-sm text-[color:var(--brown)]">
                                 {item.note}
                               </div>
                             ) : null}
                           </div>
-                          <span className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
-                            Shop
-                          </span>
-                        </a>
+                        )
                       ))}
                     </div>
                   ) : (
@@ -367,27 +383,43 @@ export default async function Home({ searchParams }: HomeProps) {
                   {bridesmaidItems.length ? (
                     <div className="grid gap-3">
                       {bridesmaidItems.map((item) => (
-                        <a
-                          key={item.id}
-                          className="flex items-center justify-between rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4 transition hover:-translate-y-0.5"
-                          href={item.link}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <div>
+                        item.link ? (
+                          <a
+                            key={item.id}
+                            className="flex items-center justify-between rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4 transition hover:-translate-y-0.5"
+                            href={item.link}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <div>
+                              <div className="text-base font-semibold text-[color:var(--deep-brown)]">
+                                {item.name}
+                              </div>
+                              {item.note ? (
+                                <div className="text-sm text-[color:var(--brown)]">
+                                  {item.note}
+                                </div>
+                              ) : null}
+                            </div>
+                            <span className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
+                              Shop
+                            </span>
+                          </a>
+                        ) : (
+                          <div
+                            key={item.id}
+                            className="rounded-2xl border border-[color:var(--blush)] bg-white/70 p-4"
+                          >
                             <div className="text-base font-semibold text-[color:var(--deep-brown)]">
                               {item.name}
                             </div>
                             {item.note ? (
-                              <div className="text-sm text-[color:var(--brown)]">
+                              <div className="mt-1 text-sm text-[color:var(--brown)]">
                                 {item.note}
                               </div>
                             ) : null}
                           </div>
-                          <span className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
-                            Shop
-                          </span>
-                        </a>
+                        )
                       ))}
                     </div>
                   ) : (

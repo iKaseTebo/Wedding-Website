@@ -1,0 +1,1 @@
+ALTER TABLE "party_members" DROP COLUMN "clerk_user_id";
