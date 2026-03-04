@@ -11,11 +11,11 @@ type HomeProps = {
 
 const partyColorOrder = [
   "olive",
-  "moss green",
   "paprika",
-  "mai tai",
-  "cinnamon",
   "butterscotch",
+  "moss green",
+  "cinnamon",
+  "mai tai",
 ];
 
 const rsvpNotice: Record<string, string> = {
@@ -149,76 +149,96 @@ export default async function Home({ searchParams }: HomeProps) {
     <div className="sunburst min-h-screen">
       <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-6 py-10">
         <div className="paper rise p-6 sm:p-10">
-          <header className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex flex-1 flex-col gap-4">
-              <div className="badge">06 · 06 · 2026</div>
-              <h1 className="font-display text-4xl uppercase tracking-[0.24em] text-[color:var(--deep-brown)] sm:text-5xl">
+          <header className="flex flex-col gap-8">
+            <div className="flex flex-wrap justify-center gap-3">
+              <a className="btn btn-primary min-w-32" href="#rsvp">
+                RSVP
+              </a>
+              <a
+                className="btn btn-secondary min-w-32"
+                href={registryUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Registry
+              </a>
+              <a className="btn btn-secondary min-w-40" href="#party">
+                Wedding Party
+              </a>
+            </div>
+
+            <div className="flex flex-col items-center gap-4 text-center">
+              <h1 className="font-display text-5xl text-[color:var(--paprika)] sm:text-6xl lg:text-7xl">
                 Rebecca & Kase
               </h1>
-              <p className="max-w-xl text-lg leading-8 text-[color:var(--brown)]">
+              <p className="max-w-3xl text-lg leading-8 text-[color:var(--brown)] sm:text-xl">
                 A retro 70s disco celebration with velvet nights, sunburst
-                skies, and all the good grooves. Join us in Natural Bridge, NY.
+                skies, and all the good grooves. Join us in Natural Bridge, NY
+                for golden hour vows, dinner at home, and dancing under the
+                stars.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <a className="btn btn-primary" href="#rsvp">
-                  RSVP
-                </a>
-                <a
-                  className="btn btn-secondary"
-                  href={registryUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Registry
-                </a>
-                <a className="btn btn-secondary" href="#party">
-                  Wedding Party
-                </a>
-              </div>
             </div>
           </header>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="card rise delay-1 relative h-48 overflow-hidden p-0 sm:h-40 lg:h-48">
+          <div className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="card rise delay-1 relative min-h-72 overflow-hidden p-0 sm:row-span-2 sm:min-h-full">
                 <Image
                   src="/1.jpg"
                   alt="Rebecca and Kase photo 1"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 33vw, 26vw"
+                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 38vw"
                   priority
                 />
               </div>
-              <div className="card rise delay-2 relative h-48 overflow-hidden p-0 sm:h-40 lg:h-48">
+              <div className="card rise delay-2 relative h-52 overflow-hidden p-0 sm:h-56">
                 <Image
                   src="/2.jpg"
                   alt="Rebecca and Kase photo 2"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 33vw, 26vw"
+                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 20vw"
                 />
               </div>
-              <div className="card rise delay-3 relative h-48 overflow-hidden p-0 sm:h-40 lg:h-48">
+              <div className="card rise delay-3 relative h-52 overflow-hidden p-0 sm:h-56">
                 <Image
                   src="/3.jpg"
                   alt="Rebecca and Kase photo 3"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 33vw, 26vw"
+                  sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 20vw"
                 />
               </div>
             </div>
-            <div className="card flex flex-col justify-center gap-4 p-6">
-              <div className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
-                The place
+            <div className="grid gap-4">
+              <div className="card flex flex-col gap-3 p-6">
+                <div className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
+                  The Date
+                </div>
+                <div className="font-display text-3xl text-[color:var(--paprika)]">
+                  June 6, 2026
+                </div>
+                <div className="text-base leading-7 text-[color:var(--brown)]">
+                  Guests arrive at 3:00 PM, ceremony at golden hour, then dinner
+                  and dancing into the night.
+                </div>
               </div>
-              <div className="text-2xl font-semibold text-[color:var(--deep-brown)]">
-                Our Home · Natural Bridge, NY
+              <div className="card flex flex-col gap-3 p-6">
+                <div className="text-sm uppercase tracking-[0.3em] text-[color:var(--paprika)]">
+                  The Place
+                </div>
+                <div className="font-display text-3xl text-[color:var(--paprika)]">
+                  Our Home
+                </div>
+                <div className="text-base leading-7 text-[color:var(--brown)]">
+                  Natural Bridge, NY
+                  <br />
+                  41922 CR 41
+                </div>
               </div>
-              <div className="text-base leading-7 text-[color:var(--brown)]">
-                Ceremony at golden hour, disco under the stars, and all the
-                comfort foods you love.
+              <div className="rounded-3xl border border-[color:rgba(79,54,36,0.12)] bg-white/55 px-5 py-4 text-sm uppercase tracking-[0.28em] text-[color:var(--brown)]">
+                Cozy dinner. Comfort food. Disco after dark.
               </div>
             </div>
           </div>
