@@ -299,7 +299,7 @@ export default async function Home({ searchParams }: HomeProps) {
                   </div>
                   {groomsmanItems.length ? (
                     <div className="grid gap-3">
-                      {groomsmanItems.map((item) => (
+                      {groomsmanItems.map((item) =>
                         item.link ? (
                           <a
                             key={item.id}
@@ -336,8 +336,8 @@ export default async function Home({ searchParams }: HomeProps) {
                               </div>
                             ) : null}
                           </div>
-                        )
-                      ))}
+                        ),
+                      )}
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-dashed border-[color:var(--paprika)] p-4 text-[color:var(--paprika)]">
@@ -383,7 +383,7 @@ export default async function Home({ searchParams }: HomeProps) {
                   </div>
                   {bridesmaidItems.length ? (
                     <div className="grid gap-3">
-                      {bridesmaidItems.map((item) => (
+                      {bridesmaidItems.map((item) =>
                         item.link ? (
                           <a
                             key={item.id}
@@ -420,8 +420,8 @@ export default async function Home({ searchParams }: HomeProps) {
                               </div>
                             ) : null}
                           </div>
-                        )
-                      ))}
+                        ),
+                      )}
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-dashed border-[color:var(--paprika)] p-4 text-[color:var(--paprika)]">

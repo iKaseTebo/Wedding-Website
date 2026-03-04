@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Alegreya_Sans, Yeseva_One } from "next/font/google";
+import localFont from "next/font/local";
+import { Alegreya_Sans } from "next/font/google";
 import "./globals.css";
 
-const display = Yeseva_One({
+const display = localFont({
+  src: "../public/Bright-Font.otf",
   variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400"],
+  display: "swap",
 });
 
 const body = Alegreya_Sans({
