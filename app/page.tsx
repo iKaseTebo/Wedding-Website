@@ -218,8 +218,8 @@ export default async function Home({ searchParams }: HomeProps) {
                   June 6, 2026
                 </div>
                 <div className="text-base leading-7 text-[color:var(--brown)]">
-                  Guests arrive at 3:00 PM, ceremony at golden hour, then dinner
-                  and dancing into the night.
+                  Ceremony starts at 3pm, then dinner and dancing into the
+                  night.
                 </div>
               </div>
               <div className="card flex flex-col gap-3 p-6">
