@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 
 type RsvpFormProps = {
   action: (formData: FormData) => void | Promise<void>;
@@ -19,6 +20,31 @@ function TooltipIcon() {
         {guestHelpText}
       </span>
     </span>
+  );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className="btn btn-primary w-full disabled:cursor-not-allowed disabled:opacity-70"
+      type="submit"
+      disabled={pending}
+      aria-disabled={pending}
+    >
+      {pending ? (
+        <span className="inline-flex items-center gap-2">
+          <span
+            aria-hidden="true"
+            className="h-4 w-4 animate-spin rounded-full border-2 border-[#fff5e6] border-t-transparent"
+          />
+          Sending RSVP...
+        </span>
+      ) : (
+        "Send RSVP"
+      )}
+    </button>
   );
 }
 
@@ -138,9 +164,7 @@ export default function RsvpForm({ action }: RsvpFormProps) {
         />
       </label>
 
-      <button className="btn btn-primary w-full" type="submit">
-        Send RSVP
-      </button>
+      <SubmitButton />
     </form>
   );
 }

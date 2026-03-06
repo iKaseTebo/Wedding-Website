@@ -39,6 +39,12 @@ a {
   letter-spacing: 0.04em;
 }
 
+.date-numerals {
+  font-family: var(--font-body), "Trebuchet MS", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 h1,
 h2,
 h3,

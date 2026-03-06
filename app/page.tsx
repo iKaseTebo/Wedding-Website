@@ -215,7 +215,7 @@ export default async function Home({ searchParams }: HomeProps) {
                   The Date
                 </div>
                 <div className="font-display text-3xl text-[color:var(--paprika)]">
-                  June 6, 2026
+                  June <span className="date-numerals mb-2">6, 2026</span>
                 </div>
                 <div className="text-base leading-7 text-[color:var(--brown)]">
                   Ceremony starts at 3pm, then dinner and dancing into the
